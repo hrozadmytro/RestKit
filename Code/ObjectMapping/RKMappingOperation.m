@@ -773,7 +773,21 @@ static NSArray *RKInsertInMetadataList(NSArray *list, id metadata1, id metadata2
             continue;
         }
 
-        id value = (sourceKeyPath == nil) ? [sourceObject valueForKey:@"self"] : [sourceObject valueForKeyPath:sourceKeyPath];
+        id value = nil;
+        // Resolve dynamic nested child attributes when parent key name is
+        // dotted and children are referenced by key path.
+        if (self.nestedAttributeSubstitutionValue != nil && NSLocationInRange(0, [sourceKeyPath rangeOfString:self.nestedAttributeSubstitutionValue])) {
+            id nestedAttributeDottedParentObject = [sourceObject valueForKey:self.nestedAttributeSubstitutionValue];
+            NSString *nestedAttributeChildKey = [sourceKeyPath stringByReplacingOccurrencesOfString:self.nestedAttributeSubstitutionValue withString:@""];
+            nestedAttributeChildKey = [nestedAttributeChildKey stringByReplacingOccurrencesOfString:@"." withString:@"" options:0 range:NSMakeRange(0,1)];
+            id nestedAttributeChildValue = [nestedAttributeDottedParentObject valueForKeyPath:nestedAttributeChildKey];
+            if (nestedAttributeChildValue != nil) {
+                value = nestedAttributeChildValue;
+            }
+        } else {
+            value = (sourceKeyPath == nil) ? [sourceObject valueForKey:@"self"] : [sourceObject valueForKeyPath:sourceKeyPath];
+        }
+        
         if ([self applyAttributeMapping:attributeMapping withValue:value]) {
             appliedMappings = YES;
         } else {
