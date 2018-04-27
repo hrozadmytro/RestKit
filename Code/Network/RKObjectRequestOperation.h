@@ -23,6 +23,11 @@
 #import "RKMapperOperation.h"
 
 /**
+  Notification being posted on any request error occurance.
+ */
+static NSString * const RKObjectRequestOperationResponseErrorNotificationKey = @"RKObjectRequestOperationResponseErrorNotificationKey";
+
+/**
  The key for a Boolean NSNumber value that indicates if a `NSCachedURLResponse` stored in the `NSURLCache` has been object mapped to completion. This key is stored on the `userInfo` of the cached response, if any, just before an `RKObjectRequestOperation` transitions to the finished state.
  */
 extern NSString * const RKResponseHasBeenMappedCacheUserInfoKey;

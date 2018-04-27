@@ -434,6 +434,7 @@ static NSString *RKStringDescribingURLResponseWithData(NSURLResponse *response, 
             }
             
             if (strongSelf.error) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:RKObjectRequestOperationResponseErrorNotificationKey object:strongSelf];
                 if (failure) {
                     dispatch_async(strongSelf.failureCallbackQueue ?: dispatch_get_main_queue(), ^{
                         failure(strongSelf, strongSelf.error);
