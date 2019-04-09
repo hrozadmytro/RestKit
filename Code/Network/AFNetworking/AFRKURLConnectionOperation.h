@@ -24,6 +24,9 @@
 
 #import <Availability.h>
 
+/// Identifier passed as 'object'
+static NSString * const kRestKitRequestInvalidateBGTaskNotification = @"kRestKitRequestInvalidateBGTaskNotification";
+
 /**
  `AFURLConnectionOperation` is a subclass of `NSOperation` that implements `NSURLConnection` delegate methods.
 
@@ -240,19 +243,6 @@ NSCoding, NSCopying>
  Pause/Resume behavior varies depending on the underlying implementation for the operation class. In its base implementation, resuming a paused requests restarts the original request. However, since HTTP defines a specification for how to request a specific content range, `AFHTTPRequestOperation` will resume downloading the request from where it left off, instead of restarting the original request.
  */
 - (void)resume;
-
-///----------------------------------------------
-/// @name Configuring Backgrounding Task Behavior
-///----------------------------------------------
-
-/**
- Specifies that the operation should continue execution after the app has entered the background, and the expiration handler for that background task.
-
- @param handler A handler to be called shortly before the application’s remaining background time reaches 0. The handler is wrapped in a block that cancels the operation, and cleans up and marks the end of execution, unlike the `handler` parameter in `UIApplication -beginBackgroundTaskWithExpirationHandler:`, which expects this to be done in the handler itself. The handler is called synchronously on the main thread, thus blocking the application’s suspension momentarily while the application is notified.
- */
-#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && !defined(APP_EXTENSION)
-- (void)setShouldExecuteAsBackgroundTaskWithExpirationHandler:(void (^)(void))handler;
-#endif
 
 ///---------------------------------
 /// @name Setting Progress Callbacks

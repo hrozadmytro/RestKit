@@ -93,9 +93,9 @@ static NSTimeInterval const kAFRKNetworkActivityIndicatorInvisibilityDelay = 0.1
 }
 
 - (void)updateNetworkActivityIndicatorVisibility {
-#ifndef APP_EXTENSION
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:[self isNetworkActivityIndicatorVisible]];
-#endif
+    // Support app extensions
+    NSString *notificationName = [self isNetworkActivityIndicatorVisible] ? kRestKitRequestShowActivityIndicator : kRestKitRequestHideActivityIndicator;
+    [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
 }
 
 // Not exposed, but used if activityCount is set via KVC.
