@@ -158,10 +158,14 @@ NSString * const RKPropertyInspectionIsPrimitiveKey = @"isPrimitive";
 
 - (Class)classForPropertyNamed:(NSString *)propertyName ofClass:(Class)objectClass isPrimitive:(BOOL *)isPrimitive
 {
-    NSDictionary *classInspection = [self propertyInspectionForClass:objectClass];
-    RKPropertyInspectorPropertyInfo *propertyInspection = classInspection[propertyName];
-    if (isPrimitive) *isPrimitive = propertyInspection.isPrimitive;
-    return propertyInspection.keyValueCodingClass;
+    if ([objectClass isSubclassOfClass:[NSDictionary class]]) {
+        return nil;
+    } else {
+        NSDictionary *classInspection = [self propertyInspectionForClass:objectClass];
+        RKPropertyInspectorPropertyInfo *propertyInspection = classInspection[propertyName];
+        if (isPrimitive) *isPrimitive = propertyInspection.isPrimitive;
+        return propertyInspection.keyValueCodingClass;
+    }
 }
 
 @end
