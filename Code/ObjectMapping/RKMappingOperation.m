@@ -558,7 +558,13 @@ static NSArray *RKInsertInMetadataList(NSArray *list, id metadata1, id metadata2
         
         if ([destinationObject respondsToSelector:@selector(validateValue:forKeyPath:error:)]) {
             NSError *validationError;
-            success = [destinationObject validateValue:value forKeyPath:keyPath error:&validationError];
+            
+            if (![destinationObject isKindOfClass:[NSDictionary class]]) {
+                success = [destinationObject validateValue:value forKeyPath:keyPath error:&validationError];
+            } else if (keyPath == nil) {
+                success = NO;
+            }
+            
             if (!success) {
                 self.error = validationError;
                 if (validationError) {
@@ -990,7 +996,11 @@ static NSArray *RKInsertInMetadataList(NSArray *list, id metadata1, id metadata2
     if ([self shouldSetValue:&valueForRelationship forKeyPath:destinationKeyPath usingMapping:relationshipMapping]) {
         if (! [self mapCoreDataToManyRelationshipValue:valueForRelationship withMapping:relationshipMapping]) {
             RKLogTrace(@"Mapped relationship object from keyPath '%@' to '%@'. Value: %@", relationshipMapping.sourceKeyPath, destinationKeyPath, valueForRelationship);
-            [self.destinationObject setValue:valueForRelationship forKeyPath:destinationKeyPath];
+            if ([self.destinationObject isKindOfClass:[NSMutableDictionary class]]) {
+                ((NSMutableDictionary *)self.destinationObject)[destinationKeyPath] = valueForRelationship;
+            } else {
+                [self.destinationObject setValue:valueForRelationship forKeyPath:destinationKeyPath];
+            }
         }
     } else {
         if ([self.delegate respondsToSelector:@selector(mappingOperation:didNotSetUnchangedValue:forKeyPath:usingMapping:)]) {
