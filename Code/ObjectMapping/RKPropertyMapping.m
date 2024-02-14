@@ -58,12 +58,12 @@ static NSString *RKStringByReplacingUnderscoresWithBraces(NSString *string)
 
 - (void)setSourceKeyPath:(NSString *)sourceKeyPath
 {
-    _sourceKeyPath = RKStringByReplacingUnderscoresWithBraces(sourceKeyPath);
+    _sourceKeyPath = sourceKeyPath;
 }
 
 - (void)setDestinationKeyPath:(NSString *)destinationKeyPath
 {
-    _destinationKeyPath = RKStringByReplacingUnderscoresWithBraces(destinationKeyPath);
+    _destinationKeyPath = destinationKeyPath;
 }
 
 - (NSString *)description
